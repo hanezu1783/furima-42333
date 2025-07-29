@@ -74,6 +74,56 @@ RSpec.describe User, type: :model do
         @user.valid?
         expect(@user.errors.full_messages).to include('Password is too short (minimum is 6 characters)')
       end
+      it 'passwordが数字のみでは登録できない' do
+        @user.password = '123456'
+        @user.password_confirmation = '123456'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Password は半角英数字を混合して入力してください')
+      end
+
+      it 'passwordが英字のみでは登録できない' do
+        @user.password = 'abcdef'
+        @user.password_confirmation = 'abcdef'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Password は半角英数字を混合して入力してください')
+      end
+
+      it 'passwordが全角英数字の場合登録できない' do
+        @user.password = 'ＡＢＣ１２３'
+        @user.password_confirmation = 'ＡＢＣ１２３'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Password は半角英数字を混合して入力してください')
+      end
+
+      it 'passwordが半角英字と全角数字の混合の場合登録できない' do
+        @user.password = 'abc１２３'
+        @user.password_confirmation = 'abc１２３'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Password は半角英数字を混合して入力してください')
+      end
+
+      it 'last_nameが全角でないと登録できない' do
+        @user.last_name = 'yamada'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Last name is invalid. Input full-width characters.')
+      end
+
+      it 'first_nameが全角でないと登録できない' do
+        @user.first_name = 'taro'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('First name is invalid. Input full-width characters.')
+      end
+
+      it 'last_name_readingが全角カタカナでないと登録できない' do
+        @user.last_name_reading = 'やまだ'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Last name reading is invalid. Input full-width katakana characters.')
+      end
+      it 'first_name_readingが全角カタカナでないと登録できない' do
+        @user.first_name_reading = 'たろう'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('First name reading is invalid. Input full-width katakana characters.')
+      end
     end
   end
 end
