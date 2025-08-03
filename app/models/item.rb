@@ -16,7 +16,19 @@ class Item < ApplicationRecord
     validates :shipping_cost_id, numericality: { other_than: 1, message: "can't be blank" }
     validates :prefecture_id, numericality: { other_than: 1, message: "can't be blank" }
     validates :shipping_day_id, numericality: { other_than: 1, message: "can't be blank" }
-    validates :price
-    validates :item_image
+    validates :price, numericality: {
+      only_integer: true,
+      greater_than_or_equal_to: 300,
+      less_than_or_equal_to: 9_999_999
+    }
+  end
+  validate :validate_item_image
+
+  private
+
+  def validate_item_image
+    return if item_image.attached?
+
+    errors.add(:item_image, :blank)
   end
 end
