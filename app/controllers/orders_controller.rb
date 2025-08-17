@@ -34,13 +34,12 @@ class OrdersController < ApplicationController
     Payjp.api_key = ENV['PAYJP_SECRET_KEY']
     Payjp::Charge.create(
       amount: @item.price,
-      card: order_address_params[:token], # トークンを利用
+      card: order_address_params[:token],
       currency: 'jpy'
     )
   end
 
   def redirect_if_invalid
-    # 出品者が購入しようとした場合、または既に売却済みならトップへ
     redirect_to root_path if current_user.id == @item.user_id || @item.order.present?
   end
 end

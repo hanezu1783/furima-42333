@@ -22,16 +22,18 @@ const pay = () => {
     e.preventDefault();
 
     payjp.createToken(numberElement).then(function(response) {
+      let token = "";
+
       if (response.error) {
-        alert(response.error.message);
-        return;
+        token = "";
+      } else {
+        token = response.id;
       }
 
-      const token = response.id;
 
       const tokenInput = document.createElement('input');
       tokenInput.setAttribute('type', 'hidden');
-      tokenInput.setAttribute('name', 'token');
+      tokenInput.setAttribute('name', 'order_address[token]')
       tokenInput.setAttribute('value', token);
       form.appendChild(tokenInput);
 
